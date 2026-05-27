@@ -1,34 +1,53 @@
+import os
 import pymupdf as pypdf
-from camel_tools.utils import normalize
+from camel_tools.utils.normalize import (
+    normalize_alef_ar,
+    normalize_alef_maksura_ar,
+    normalize_teh_marbuta_ar,
+)
 from camel_tools.utils.dediac import dediac_ar
-
-
-def extract_text_for_llm(path):
-    all_text = []
-    with pypdf.open(path) as pdf:
-        for page in pdf:
-            text = page.get_text()
-            if text:
-                # Keep the raw, unaltered text
-                all_text.append(f"--- Page {page.number} ---\n{text}")
-
-    return "\n\n".join(all_text)
+from langchain_core.documents import Document
 
 
 def preprocess_text(raw_text):
-    # rem = remove
 
-    norm_text = normalize.normalize_alef_ar(raw_text)
-    norm_text = normalize.normalize_alef_maksura_ar(norm_text)
-    norm_text = normalize.normalize_teh_marbuta_ar(norm_text)
-    norm_text = dediac_ar(norm_text)
-    return norm_text
+    text = normalize_alef_ar(raw_text)
+    text = normalize_alef_maksura_ar(text)
+    text = normalize_teh_marbuta_ar(text)
+    text = dediac_ar(text)
 
+    # normalize whitespace
+    text = " ".join(text.split())
+    return text
+
+
+def extract_text(path) -> list[Document]:
+    pages = []
+
+    try:
+        with pypdf.open(path) as pdf:
+            for page_num, page in enumerate(pdf, start=1):  # type: ignore
+                text = page.get_text()
+                if not text or not text.strip():
+                    continue
+
+                cleaned_text = preprocess_text(text)
+
+                pages.append(
+                    {
+                        "page": page_num,
+                        "text": cleaned_text,
+                        "source": os.path.basename(path),
+                    }
+                )
+    except Exception as e:
+        print(f"Error reading PDF: {e}")
+    return pages
 
 # --------- Enable comments for debugging ---------
 
 
-# raw_text = extract_text_for_llm("data/SDAIA.pdf")
+# raw_text = extract_text("data/SDAIA.pdf")
 # print(len(raw_text))
 
 
