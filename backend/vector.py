@@ -6,6 +6,7 @@ load_dotenv()
 
 
 url = os.getenv("QDRANT_ENDPOINT")
+qdrant_api = os.getenv("QDRANT_API_KEY")
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
 
@@ -15,6 +16,7 @@ def vector_embedding(docs, collection_name) -> QdrantVectorStore:
         embedding=embeddings,
         url=url,
         prefer_grpc=True,
-        collection_name=collection_name
+        collection_name=collection_name,
+        api_key=qdrant_api
     )
     return qdrant
