@@ -3,7 +3,7 @@ from ingest import extract_text
 from langchain_core.documents import Document
 
 
-def chunk_text(pages, chunk_size=700, chunk_overlap=150) -> list[Document]:
+def chunk_text(pages, chunk_size=500, chunk_overlap=50) -> list[Document]:
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
