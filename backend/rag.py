@@ -7,7 +7,7 @@ from llm import generate_answer
 collection_name = "rag"
 
 
-query = "ماهو الذكاء الاصطناعي؟"
+query = "تاريخ الذكاء الاصطناعي"
 
 
 def rag_pipeline(query):

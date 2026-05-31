@@ -1,3 +1,4 @@
+import re
 import os
 import pymupdf as pypdf
 from camel_tools.utils.normalize import (
@@ -16,8 +17,12 @@ def preprocess_text(raw_text):
     text = normalize_teh_marbuta_ar(text)
     text = dediac_ar(text)
 
-    # normalize whitespace
-    text = " ".join(text.split())
+    # Replace punctuation with single spaces
+    text = re.sub(r"[^\w\s]", " ", text)
+    # Collapse multiple spaces into one space
+    text = re.sub(r"\s+", " ", text)
+    # Remove trailing and leading spaces
+    text = text.strip()
     return text
 
 

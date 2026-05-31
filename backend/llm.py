@@ -5,21 +5,37 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def generate_answer(query, context, model="gpt-5-nano", temperature=0.0):
+def generate_answer(query, context,
+                    model="gpt-4.1-mini",
+                    temperature=0.0):
+
+    if not context.strip():
+        return "لا أملك معلومات كافية للإجابة."
 
     llm = ChatOpenAI(
         model=model,
-        temperature=temperature
+        temperature=temperature,
+        max_tokens=500  # type: ignore
     )
 
     prompt = ChatPromptTemplate.from_messages([
         (
             "system",
             """
-            أجب على السؤال فقط باستخدام المعلومات الموجودة في السياق.
-            إذا لم تجد الإجابة قل:
+            أنت نظام سؤال وجواب عربي يعتمد على تقنية RAG.
+
+            مهمتك:
+            الإجابة على سؤال المستخدم بالاعتماد فقط على المعلومات الموجودة داخل السياق المقدم.
+
+            قواعد مهمة:
+            1. استخدم فقط المعلومات الموجودة في السياق.
+            2. ممنوع استخدام أي معرفة خارجية.
+            3. إذا لم تجد الإجابة بشكل واضح داخل السياق، قل فقط:
             "لا أملك معلومات كافية للإجابة."
-            أجب على شكل نقاط.
+            4. لا تخمن أو تؤلف أي معلومة.
+            5. أجب بلغة عربية فصحى واضحة ومختصرة.
+            6. إذا احتوت الإجابة على نقاط متعددة فقم بتنظيمها باستخدام تعداد نقطي.
+            7. لا تكرر السؤال داخل الإجابة.
             """
         ),
         (
@@ -41,4 +57,4 @@ def generate_answer(query, context, model="gpt-5-nano", temperature=0.0):
         "query": query
     })
 
-    return response.content
+    return response.content.strip()  # type: ignore
