@@ -55,7 +55,7 @@ def extract_text(path) -> list[Document]:
     return pages
 
 
-def process_pdf(path: str):
+def process_pdf(path: str): 
     raw_text = extract_text(path)
     chunks = chunk_text(raw_text)
     vector_embedding(chunks, collection_name)
