@@ -1,5 +1,4 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from ingest import extract_text
 from langchain_core.documents import Document
 
 
@@ -32,20 +31,3 @@ def chunk_text(pages, chunk_size=500, chunk_overlap=50) -> list[Document]:
             )
             documents.append(doc)
     return documents
-
-
-# --------- Enable comments for debugging ---------
-
-# pages = extract_text("data/SDAIA.pdf")
-
-# documents = chunk_text(pages)
-
-# print(documents[0].page_content)
-# print(documents[0].metadata)
-# print(f"Total chunks: {len(documents)}")
-
-# with open("Chunked.txt", "w", encoding="utf-8") as f:
-#     for chunk in documents:
-#         chunk = chunk.page_content + "\n\n"
-#         f.write(chunk)
-# #  print(chunked_text)

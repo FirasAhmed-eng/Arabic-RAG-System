@@ -1,30 +1,24 @@
-from ingest import extract_text
-from chunking import chunk_text
-from vector import vector_embedding
+from vector import get_vector_store
 from llm import generate_answer
 
 
 collection_name = "rag"
-
-
 query = "تاريخ الذكاء الاصطناعي"
-
-raw_text = extract_text("data/SDAIA.pdf")
-chunks = chunk_text(raw_text)
-print(len(chunks))
 
 
 def rag_pipeline(query):
+    db = get_vector_store(collection_name)
 
-    db = vector_embedding(chunks, collection_name)
+    result = db.similarity_search_with_score(
+        query=query,
+        k=3
+    )
 
-    result = db.similarity_search_with_score(query=query, k=3)
+    context = "\n\n".join(
+        [doc.page_content for doc, score in result]
+    )
 
-    context = "\n\n".join([doc.page_content for doc, score in result])
-
-    answer = generate_answer(query, context)
-
-    return answer
+    return generate_answer(query, context)
 
 
 answer = rag_pipeline(query)
