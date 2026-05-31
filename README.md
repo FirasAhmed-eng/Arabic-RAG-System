@@ -16,8 +16,6 @@ A simple Retrieval-Augmented Generation (RAG) application built with LangChain, 
 
 ```text
 .
-├── data/
-│   └── SDAIA.pdf
 ├── ingest.py
 ├── chunking.py
 ├── vector.py
@@ -127,9 +125,7 @@ query = "تاريخ الذكاء الاصطناعي"
 
 ## Future Improvements
 
-* Interactive CLI chatbot
 * Streamlit web interface
-* Conversational memory
 * Hybrid search (keyword + vector)
 * Metadata filtering
 * Multi-document support
