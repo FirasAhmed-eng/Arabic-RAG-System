@@ -1,5 +1,5 @@
-from vector import get_vector_store
-from llm import generate_answer
+from backend.rag.vector import get_vector_store
+from backend.rag.llm import generate_answer
 
 
 collection_name = "rag"

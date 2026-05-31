@@ -9,8 +9,8 @@ from camel_tools.utils.normalize import (
 from camel_tools.utils.dediac import dediac_ar
 from langchain_core.documents import Document
 
-from vector import vector_embedding
-from chunking import chunk_text
+from backend.rag.vector import vector_embedding
+from backend.rag.chunking import chunk_text
 
 collection_name = "rag"
 
@@ -55,10 +55,12 @@ def extract_text(path) -> list[Document]:
     return pages
 
 
-raw_text = extract_text("data/SDAIA.pdf")
-chunks = chunk_text(raw_text)
-print(len(chunks))
+def process_pdf(path: str):
+    raw_text = extract_text(path)
+    chunks = chunk_text(raw_text)
+    vector_embedding(chunks, collection_name)
+    return {
+        "pages": len(raw_text),
+        "chunks": len(chunks),
+    }
 
-vector_embedding(chunks, collection_name)
-
-print("Collection ready.")
