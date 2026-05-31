@@ -49,19 +49,3 @@ def extract_text(path) -> list[Document]:
         print(f"Error reading PDF: {e}")
     return pages
 
-# --------- Enable comments for debugging ---------
-
-
-# raw_text = extract_text("data/SDAIA.pdf")
-# print(len(raw_text))
-
-
-# with open("debug_output.txt", "w", encoding="utf-8") as f:
-#     f.write(raw_text[9990:11000])
-
-
-# sentence = "هَلْ ذَهَبْتَ إِلَى المَكْتَبَةِ؟"
-
-# print(preprocess_text(sentence))
-# with open("debug_output.txt", "w", encoding="utf-8") as f:
-#     f.write(preprocess_text(sentence))

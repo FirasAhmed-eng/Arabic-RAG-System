@@ -9,11 +9,13 @@ collection_name = "rag"
 
 query = "تاريخ الذكاء الاصطناعي"
 
+raw_text = extract_text("data/SDAIA.pdf")
+chunks = chunk_text(raw_text)
+print(len(chunks))
+
 
 def rag_pipeline(query):
-    raw_text = extract_text("data/SDAIA.pdf")
-    chunks = chunk_text(raw_text)
-    print(len(chunks))
+
     db = vector_embedding(chunks, collection_name)
 
     result = db.similarity_search_with_score(query=query, k=3)
