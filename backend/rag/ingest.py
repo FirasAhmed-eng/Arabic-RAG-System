@@ -12,8 +12,6 @@ from langchain_core.documents import Document
 from backend.rag.vector import vector_embedding
 from backend.rag.chunking import chunk_text
 
-collection_name = "rag"
-
 
 def preprocess_text(raw_text):
 
@@ -55,7 +53,7 @@ def extract_text(path) -> list[Document]:
     return pages
 
 
-def process_pdf(path: str): 
+def process_pdf(path: str, collection_name: str):
     raw_text = extract_text(path)
     chunks = chunk_text(raw_text)
     vector_embedding(chunks, collection_name)
@@ -63,4 +61,3 @@ def process_pdf(path: str):
         "pages": len(raw_text),
         "chunks": len(chunks),
     }
-

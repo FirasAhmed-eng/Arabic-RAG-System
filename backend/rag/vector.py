@@ -27,11 +27,13 @@ def vector_embedding(docs, collection_name):
             collection_name=collection_name,
         )
 
-    return QdrantVectorStore(
+    db = QdrantVectorStore(
         client=client,
         collection_name=collection_name,
         embedding=embeddings,
     )
+    db.add_documents(docs)
+    return db
 
 
 def get_vector_store(collection_name):
