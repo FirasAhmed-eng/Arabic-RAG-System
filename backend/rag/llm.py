@@ -7,7 +7,7 @@ load_dotenv()
 
 def generate_answer(query, context,
                     model="gpt-4.1-mini",
-                    temperature=0.0):
+                    temperature=0.1):
 
     if not context.strip():
         return "لا أملك معلومات كافية للإجابة."
@@ -15,7 +15,7 @@ def generate_answer(query, context,
     llm = ChatOpenAI(
         model=model,
         temperature=temperature,
-        max_tokens=500  # type: ignore
+        max_tokens=1000  # type: ignore
     )
 
     prompt = ChatPromptTemplate.from_messages([

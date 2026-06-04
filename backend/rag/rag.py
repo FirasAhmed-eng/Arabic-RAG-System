@@ -2,26 +2,18 @@ from backend.rag.vector import get_vector_store
 from backend.rag.llm import generate_answer
 
 
-collection_name = "rag"
-query = "تاريخ الذكاء الاصطناعي"
-
-
-def rag_pipeline(query):
+def rag_pipeline(query, collection_name="rag", top_k: int = 3):
     db = get_vector_store(collection_name)
 
     result = db.similarity_search_with_score(
         query=query,
-        k=3
+        k=top_k
     )
 
     context = "\n\n".join(
-        [doc.page_content for doc, score in result]
+        [doc.page_content for doc, score in result if score > 0.5]
     )
 
-    return generate_answer(query, context)
-
-
-answer = rag_pipeline(query)
-
-with open("debug_output.txt", "w", encoding="utf-8") as f:
-    f.write(answer)  # type: ignore
+    answer = generate_answer(query, context)
+    metadata = [doc.metadata for doc, score in result if score > 0.5]
+    return {"answer": answer, "metadata": metadata}
