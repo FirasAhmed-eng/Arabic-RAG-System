@@ -7,7 +7,7 @@ load_dotenv()
 
 def generate_answer(query, context,
                     model="gpt-4.1-mini",
-                    temperature=0.1):
+                    temperature=0.2):
 
     if not context.strip():
         return "لا أملك معلومات كافية للإجابة."
