@@ -4,6 +4,7 @@ import { Upload, FileUp } from "lucide-react";
 const UploadFile = () => {
   const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState("لم يتم اختيار ملف");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -12,6 +13,7 @@ const UploadFile = () => {
       console.log("No file selected");
       return;
     }
+    setLoading(true);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -26,6 +28,8 @@ const UploadFile = () => {
       console.log(response.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,6 +71,7 @@ const UploadFile = () => {
       </div>
       <button
         onClick={handleSubmit}
+        disabled={loading}
         className="
             cursor-pointer
 
@@ -82,7 +87,7 @@ const UploadFile = () => {
   "
       >
         <Upload size={18} />
-        إرفع
+        {loading ? "جاري التحميل" : "إرفع"}
       </button>
     </div>
   );

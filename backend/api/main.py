@@ -5,6 +5,7 @@ import os
 from backend.rag.ingest import process_pdf
 from backend.rag.rag import rag_pipeline
 from pathlib import Path
+from backend.rag.ingest import preprocess_text
 
 app = FastAPI()
 
@@ -38,6 +39,7 @@ async def upload_file(file: UploadFile = File(...), collection_name: str = "rag"
 
 @app.get("/api/chat")
 async def chat(query: str, collection_name: str = "rag"):
+    query = preprocess_text(query)
     answer = rag_pipeline(query, collection_name, 10)
 
     return {

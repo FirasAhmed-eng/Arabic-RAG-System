@@ -20,7 +20,7 @@ client = QdrantClient(
 
 
 def vector_embedding(docs, collection_name):
-
+    print("Creating embeddings...")
     if not client.collection_exists(collection_name):
 
         dim = len(embeddings.embed_query("test"))
@@ -39,7 +39,19 @@ def vector_embedding(docs, collection_name):
         embedding=embeddings,
     )
 
-    db.add_documents(docs)
+    BATCH_SIZE = 100
+
+    for i in range(0, len(docs), BATCH_SIZE):
+
+        batch = docs[i:i + BATCH_SIZE]
+
+        print(
+            f"Uploading batch "
+            f"{i//BATCH_SIZE + 1}"
+        )
+        print("Uploading to Qdrant...")
+        db.add_documents(batch)
+    # db.add_documents(docs)
 
     return db
 
