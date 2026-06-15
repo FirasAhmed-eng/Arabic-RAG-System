@@ -51,8 +51,7 @@ def vector_embedding(docs, collection_name):
         )
         print("Uploading to Qdrant...")
         db.add_documents(batch)
-    # db.add_documents(docs)
-
+    print("Total docs:", len(docs))
     return db
 
 
