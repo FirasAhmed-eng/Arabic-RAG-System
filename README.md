@@ -1,135 +1,291 @@
 # Arabic RAG System
 
-A simple Retrieval-Augmented Generation (RAG) application built with LangChain, Qdrant, and an LLM. The system extracts text from a PDF document, stores document embeddings in Qdrant, retrieves relevant chunks based on a user query, and generates context-aware answers.
+An Arabic Retrieval-Augmented Generation (RAG) system built with FastAPI, LangChain, Qdrant, OpenAI, and Next.js.
+
+The system allows users to upload Arabic PDF documents, automatically extract and chunk their content, generate embeddings, store vectors in Qdrant, retrieve relevant context, and generate grounded answers using an LLM.
+
+---
 
 ## Features
 
-* PDF document ingestion
-* Text chunking
-* Vector embeddings generation
-* Qdrant vector database integration
-* Similarity search retrieval
-* Context-aware answer generation using an LLM
+* Arabic PDF ingestion
+* Recursive text chunking
+* OpenAI embeddings
+* Qdrant vector database
+* Semantic similarity search
+* Context-aware answer generation
+* FastAPI backend
+* Next.js frontend
+* RAG evaluation with Ragas
 * Arabic language support
+
+---
+
+## Architecture
+
+```text
+PDF Upload
+     │
+     ▼
+Text Extraction
+     │
+     ▼
+Chunking
+     │
+     ▼
+Embedding Generation
+     │
+     ▼
+Qdrant Vector Store
+     │
+     ▼
+User Query
+     │
+     ▼
+Similarity Search
+     │
+     ▼
+Context Construction
+     │
+     ▼
+LLM Generation
+     │
+     ▼
+Answer
+```
+
+---
 
 ## Project Structure
 
 ```text
-.
-├── ingest.py
-├── chunking.py
-├── vector.py
-├── llm.py
-├── rag.py
-├── debug_output.txt
+Arabic-RAG-System/
+│
+├── backend/
+│   ├── api/
+│   │   └── main.py
+│   │
+│   └── rag/
+│       ├── chunking.py
+│       ├── ingest.py
+│       ├── llm.py
+│       ├── rag.py
+│       ├── vector.py
+│       └── eval_ragas.py
+│
+├── frontend/
+│   └── Next.js application
+│
+├── uploads/
+│
+├── requirements.txt
 └── README.md
 ```
 
-## RAG Pipeline
+---
 
-```text
-User Query
-     ↓
-Embed Query
-     ↓
-Retrieve Top Chunks
-     ↓
-Build Context
-     ↓
-Send Context to LLM
-     ↓
-Generate Answer
-```
+## Tech Stack
+
+### Backend
+
+* FastAPI
+* LangChain
+* OpenAI
+* Qdrant
+* Ragas
+
+### Frontend
+
+* Next.js
+* React
+* TypeScript
+
+### Vector Database
+
+* Qdrant Cloud
+
+---
 
 ## Installation
 
-1. Clone the repository:
+### Clone Repository
 
 ```bash
 git clone <repository-url>
 cd Arabic-RAG-System
 ```
 
-2. Create and activate a virtual environment:
+### Create Virtual Environment
 
 ```bash
 python -m venv .venv
+```
 
-# Windows
+Windows:
+
+```bash
 .venv\Scripts\activate
+```
 
-# Linux / macOS
+Linux/macOS:
+
+```bash
 source .venv/bin/activate
 ```
 
-3. Install dependencies:
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Configure environment variables:
+### Configure Environment Variables
 
-Create a `.env` file and add:
+Create a `.env` file:
 
 ```env
-QDRANT_URL=your_qdrant_url
-QDRANT_API_KEY=your_qdrant_api_key
 OPENAI_API_KEY=your_openai_api_key
+
+QDRANT_ENDPOINT=your_qdrant_endpoint
+QDRANT_API_KEY=your_qdrant_api_key
 ```
 
-## Ingest Documents
+---
 
-Run the ingestion process once to create the vector store:
+## Running the Backend
 
 ```bash
-python ingest.py
+uvicorn backend.api.main:app --reload
 ```
 
-This will:
+Backend API:
 
-* Extract text from the PDF
-* Split text into chunks
-* Generate embeddings
-* Store vectors in Qdrant
+```text
+http://localhost:8000
+```
 
-## Run Retrieval
+---
 
-Execute the RAG pipeline:
+## Running the Frontend
 
 ```bash
-python rag.py
+cd frontend
+npm install
+npm run dev
 ```
 
-The system will:
+Frontend:
 
-1. Receive a query
-2. Retrieve the most relevant document chunks
-3. Build context
-4. Generate an answer using the LLM
-
-## Example Query
-
-```python
-query = "تاريخ الذكاء الاصطناعي"
+```text
+http://localhost:3000
 ```
 
-## Technologies Used
+---
 
-* Python
-* LangChain
-* Qdrant
-* OpenAI Embeddings
-* OpenAI LLM
-* PDF Processing Libraries
+## Uploading Documents
+
+The upload endpoint:
+
+```http
+POST /api/upload
+```
+
+Workflow:
+
+1. Save uploaded PDF
+2. Extract text
+3. Chunk text
+4. Generate embeddings
+5. Store vectors in Qdrant
+
+---
+
+## Asking Questions
+
+Example:
+
+```text
+ما هو الذكاء الاصطناعي؟
+```
+
+The system:
+
+1. Embeds the query
+2. Retrieves relevant chunks
+3. Builds context
+4. Sends context to the LLM
+5. Returns a grounded answer
+
+---
+
+## RAG Evaluation
+
+The project includes Ragas evaluation.
+
+Current metrics:
+
+* Faithfulness
+
+Example:
+
+```bash
+python -m backend.rag.eval_ragas
+```
+
+Evaluation workflow:
+
+```text
+Question
+    ↓
+Retrieve Context
+    ↓
+Generate Answer
+    ↓
+Ragas Evaluation
+    ↓
+Score Export
+```
+
+Results are saved to:
+
+```text
+score.csv
+```
+
+---
+
+## Important Note About Vector Indexing
+
+Each chunk receives a stable identifier:
+
+```text
+<source>_p<page>_c<chunk>
+```
+
+Example:
+
+```text
+SDAIAPublications09.pdf_p8_c1
+```
+
+These IDs are converted into deterministic UUIDs before insertion into Qdrant.
+
+This prevents duplicate vectors when re-uploading the same PDF and ensures existing vectors are updated instead of duplicated.
+
+---
 
 ## Future Improvements
 
-* Streamlit web interface
-* Hybrid search (keyword + vector)
-* Metadata filtering
-* Multi-document support
+* Hybrid search (BM25 + Vector Search)
+* Reranking
+* Multi-document collections
+* Citation support
+* Conversational memory
+* Additional Ragas metrics
+* Automated benchmark dataset generation
+
+---
 
 ## License
 
-This project is intended for educational and learning purposes.
+This project is intended for educational and research purposes.
