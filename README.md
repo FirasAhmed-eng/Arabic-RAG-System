@@ -76,7 +76,7 @@ Arabic-RAG-System/
 ├── frontend/
 │   └── Next.js application
 │
-├── uploads/
+├── data/
 │
 ├── requirements.txt
 └── README.md

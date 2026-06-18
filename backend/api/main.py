@@ -9,13 +9,13 @@ from backend.rag.ingest import preprocess_text
 
 app = FastAPI()
 
-origins = [
+allow_origins = [
     "http://localhost:3000",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -25,7 +25,7 @@ app.add_middleware(
 @app.post("/api/upload")
 async def upload_file(file: UploadFile = File(...), collection_name: str = "rag"):
 
-    file_path = os.path.join("data", file.filename)  # type: ignore
+    file_path = os.path.join("uploads", file.filename)  # type: ignore
     with open(file_path, "wb") as f:
         f.write(await file.read())
 

@@ -22,8 +22,8 @@ def rag_pipeline(query, collection_name="rag", top_k=10):
     context = "\n\n".join(
         [doc.page_content for doc, score in result]
     )
-    with open("context.txt", "w") as f:
-        f.write(context)
+    # with open("context.txt", "w") as f:
+    #     f.write(context)
     answer = generate_answer(query, context)
     contexts = [doc.page_content for doc, score in result]
 
