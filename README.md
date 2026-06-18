@@ -18,6 +18,7 @@ The system allows users to upload Arabic PDF documents, automatically extract an
 * Next.js frontend
 * RAG evaluation with Ragas
 * Arabic language support
+* Dockerized deployment
 
 ---
 
@@ -76,7 +77,7 @@ Arabic-RAG-System/
 ├── frontend/
 │   └── Next.js application
 │
-├── data/
+├── uploads/
 │
 ├── requirements.txt
 └── README.md
@@ -151,6 +152,67 @@ QDRANT_API_KEY=your_qdrant_api_key
 ```
 
 ---
+
+
+---
+
+## Docker Deployment
+
+### Prerequisites
+
+* Docker
+* Docker Compose
+
+Verify installation:
+
+```bash
+docker --version
+docker compose version
+```
+
+### Configure Environment Variables
+
+Create a `.env` file:
+
+```env
+OPENAI_API_KEY=your_openai_api_key
+QDRANT_ENDPOINT=your_qdrant_endpoint
+QDRANT_API_KEY=your_qdrant_api_key
+```
+
+### Build and Start Services
+
+```bash
+docker compose up --build
+```
+
+Detached mode:
+
+```bash
+docker compose up -d --build
+```
+
+### Stop Services
+
+```bash
+docker compose down
+```
+
+### View Logs
+
+```bash
+docker compose logs -f backend
+docker compose logs -f frontend
+```
+
+### Access
+
+Frontend: http://localhost:3000
+
+Backend: http://localhost:8000
+
+Docker provides a consistent environment across development, testing, and deployment.
+
 
 ## Running the Backend
 
@@ -232,24 +294,11 @@ Example:
 python -m backend.rag.eval_ragas
 ```
 
-Evaluation workflow:
-
-```text
-Question
-    ↓
-Retrieve Context
-    ↓
-Generate Answer
-    ↓
-Ragas Evaluation
-    ↓
-Score Export
-```
 
 Results are saved to:
 
 ```text
-score.csv
+evaluation_results.csv
 ```
 
 ---
@@ -265,24 +314,12 @@ Each chunk receives a stable identifier:
 Example:
 
 ```text
-SDAIAPublications09.pdf_p8_c1
+FileName.pdf_p8_c1
 ```
 
 These IDs are converted into deterministic UUIDs before insertion into Qdrant.
 
 This prevents duplicate vectors when re-uploading the same PDF and ensures existing vectors are updated instead of duplicated.
-
----
-
-## Future Improvements
-
-* Hybrid search (BM25 + Vector Search)
-* Reranking
-* Multi-document collections
-* Citation support
-* Conversational memory
-* Additional Ragas metrics
-* Automated benchmark dataset generation
 
 ---
 
